@@ -3,6 +3,7 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { Text, TextInput, View, Button } from 'react-native'
 import { connect } from 'react-redux'
 import firebase from 'react-native-firebase'
+import base64 from 'react-native-base64'
 
 import { loginUserThunk } from '../reducers/user'
 import styles from '../styles'
@@ -18,13 +19,17 @@ class Login extends Component {
     // errorMessage: null,
   }
 
-  handleLogin = () => {
-    // TODO: Firebase stuff...
-    console.log('handleLogin', this.state)
+  handleChange = (evt) => {
+    this.setState({
+      [evt.target.name]: evt.target.value
+    })
   }
 
-  handleOauth() {
-    this.props.loginUser()
+  handleLogin = () => {
+    // TODO: Firebase stuff...
+    let encoded = base64.encode('this is a test')
+    let decoded = base64.decode('dGhpcyBpcyBhIHRlc3Q=')
+    this.props.loginUserThunk()
   }
 
   componentDidMount() {
@@ -45,8 +50,9 @@ class Login extends Component {
         <TextInput
           style={styles.textInput}
           autoCapitalize='none'
-          placeholder='Email'
-          onChangeText={email => this.setState({ email })}
+          placeholder='Email or username'
+          name='email'
+          onChange={this.handleChange}
           value={this.state.email}
         />
         <TextInput
@@ -54,7 +60,8 @@ class Login extends Component {
           style={styles.textInput}
           autoCapitalize='none'
           placeholder='Password'
-          onChangeText={password => this.setState({ password })}
+          name='password'
+          onChange={this.handleChange}
           value={this.state.password}
         />
         {/* <Button
@@ -63,14 +70,13 @@ class Login extends Component {
         /> */}
 
         <Button title='Login to Github' onPress={this.handleLogin} />
-        <Button title='Login with Github' onPress={this.handleOauth} />
       </View>
     )
   }
 }
 
 const mapState = state => ({
-  user: state.user.user,
+  user: state.userReducer.user,
 })
 
 const mapDispatch = dispatch => ({

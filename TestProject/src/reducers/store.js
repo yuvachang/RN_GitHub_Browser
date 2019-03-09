@@ -2,13 +2,13 @@ import { combineReducers, createStore, applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import loggingMiddleware from 'redux-logger'
 import axios from 'axios'
-import {reducer as user} from './user'
+import userReducer from './user'
 
 const rootReducer = combineReducers({
-  user,
+  userReducer,
 })
 
-const store = createStore(
+export default createStore(
   rootReducer,
   applyMiddleware(
     // `withExtraArgument` gives us access to axios in our async action creators!
@@ -17,5 +17,3 @@ const store = createStore(
     loggingMiddleware
   )
 )
-
-export default store

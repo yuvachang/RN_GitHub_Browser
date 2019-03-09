@@ -1,26 +1,36 @@
 import axios from 'axios'
 
 const initialState = {
-  allStudents: [],
-  selectedStudent: {},
-  error: {}
+  allRepos: [],
 }
 
 //actions
-const ALLSTUDENTS = 'ALLSTUDENTS'
+const REPOS = 'REPOS'
 
 
 //action creators
-const allStudents = (students) => ({
-  type: ALLSTUDENTS,
-  students
+const getRepos = (repos) => ({
+  type: REPOS,
+  repos
 })
 
 //thunk creators
-export const allStudentsThunker = () => {
-  return async (dispatch) => {
-    const { data } = await axios.get('/api/students')
-    dispatch(allStudents(data))
+export const getReposThunk = (login) => {
+  return async dispatch => {
+    try {
+      
+      let encoded = base64.encode(`${login.email}:${login.password}`)
+      let config = {
+        headers: {'Authorization': 'Basic ' + encoded}
+      }
+      const res = await axios.get(
+        'https://api.github.com/user/repos?visibility=private&affiliation=owner&sort=created&per_page=300', config
+      )
+      const list = res.data.map(repo=>repo.name)
+      console.log('dataaaaaaaaaaaaaaa', list)
+    } catch (error) {
+      console.log('hello error', error)
+    }
   }
 }
 
