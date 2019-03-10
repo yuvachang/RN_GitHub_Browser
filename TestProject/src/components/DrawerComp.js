@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { DrawerItems } from 'react-navigation'
 import { SafeAreaView, ScrollView, Image, View, Text } from 'react-native'
+import { Header } from 'native-base'
 
 const DrawerComp = props => (
   <SafeAreaView
@@ -9,9 +10,13 @@ const DrawerComp = props => (
     <View>
       <Image source={require('../img/logo.png')} />
     </View>
+    {/* <Header>
+      <Left onPress={navigate navdrawer} />
+      <Right onPress={navigate reposDrawer} /> 
+    </Header> */}
 
     <ScrollView>
-      <DrawerItems {...props} />
+        <DrawerItems {...props} />
     </ScrollView>
   </SafeAreaView>
 )

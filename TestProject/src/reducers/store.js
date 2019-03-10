@@ -3,9 +3,11 @@ import thunkMiddleware from 'redux-thunk'
 import loggingMiddleware from 'redux-logger'
 import axios from 'axios'
 import userReducer from './user'
+import dataReducer from './data'
 
 const rootReducer = combineReducers({
   userReducer,
+  dataReducer,
 })
 
 export default createStore(

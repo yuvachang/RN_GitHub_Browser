@@ -1,43 +1,43 @@
 import React, { Component } from 'react'
-import { StackActions, NavigationActions } from 'react-navigation'
-import { AsyncStorage, Text, TextInput, View, Button, ActivityIndicator } from 'react-native'
+import {
+  Text,
+  TextInput,
+  View,
+  Button,
+  ActivityIndicator,
+} from 'react-native'
 import { connect } from 'react-redux'
 
 import { loginUserThunk, loading } from '../reducers/user'
 import styles from '../styles'
 
 class Login extends Component {
-  static navigationOptions = {
-    headerLeft: null,
-  }
-
   constructor(props) {
     super(props)
     this.state = {
-      email: '',
-      password: '',
+      email: 'yuvachang',
+      password: '12345Adgjl',
       emptyMsg: null,
     }
   }
 
   handleLogin = async () => {
-    if(this.state.email === ''&&this.state.password === '') {
-      await this.setState({emptyMsg: 'both'})
+    if (this.state.email === '' && this.state.password === '') {
+      await this.setState({ emptyMsg: 'both' })
       return
     } else if (this.state.email === '') {
-      await this.setState({emptyMsg: 'email'})
+      await this.setState({ emptyMsg: 'email' })
       return
     } else if (this.state.password === '') {
-      await this.setState({emptyMsg: 'password'})
+      await this.setState({ emptyMsg: 'password' })
       return
     }
-    await this.setState({emptyMsg: null})
+    await this.setState({ emptyMsg: null })
     this.props.loading()
     await this.props.loginUserThunk(this.state)
     if (this.props.user.id) {
-      // this.props.navigation.navigate('Home')
-      this.props.navigation.popToTop()
-    }
+      this.props.navigation.navigate('App')
+    } 
   }
 
   render() {
@@ -49,9 +49,11 @@ class Login extends Component {
             {this.props.errorMessage}: username or password incorrect
           </Text>
         )}
-        {this.state.emptyMsg==='both' && <Text>Enter credentials.</Text>}
-        {this.state.emptyMsg==='email' && <Text>Enter an email or username.</Text>}
-        {this.state.emptyMsg==='password' && <Text>Enter a password.</Text>}
+        {this.state.emptyMsg === 'both' && <Text>Enter credentials.</Text>}
+        {this.state.emptyMsg === 'email' && (
+          <Text>Enter an email or username.</Text>
+        )}
+        {this.state.emptyMsg === 'password' && <Text>Enter a password.</Text>}
         <TextInput
           style={styles.textInput}
           autoCapitalize='none'
@@ -68,7 +70,7 @@ class Login extends Component {
           value={this.state.password}
         />
         <Button title='Login to Github' onPress={this.handleLogin} />
-        {this.props.loading===true && <ActivityIndicator size="small" />}
+        {this.props.loading === true && <ActivityIndicator size='small' />}
       </View>
     )
   }
@@ -77,12 +79,12 @@ class Login extends Component {
 const mapState = state => ({
   user: state.userReducer.user,
   errorMessage: state.userReducer.errorMessage,
-  loading: state.userReducer.loading
+  loading: state.userReducer.loading,
 })
 
 const mapDispatch = dispatch => ({
   loginUserThunk: login => dispatch(loginUserThunk(login)),
-  loading: () => dispatch(loading())
+  loading: () => dispatch(loading()),
 })
 
 export default connect(
