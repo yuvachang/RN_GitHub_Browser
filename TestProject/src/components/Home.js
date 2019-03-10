@@ -1,46 +1,38 @@
 import React, { Component } from 'react'
 import { Text, View, Button } from 'react-native'
-import { StackActions, NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
-import Loading from './Loading'
+import { Icon, Header, Container, Left, Body, Right } from 'native-base'
 
 class Home extends Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerStyle: { backgroundColor: 'grey' },
-      headerTitleStyle: { textAlign: 'center', flex: 1 },
-      title: 'Home!',
-      headerLeft: <Text onPress={() => navigation.toggleDrawer()}>Menu</Text>,
-      headerRight: <View />,
-    }
-  }
-  handleLogin() {}
-
-  componentDidUpdate(prevProps){
-    if((prevProps.user.id && !this.props.user.id)|| !this.props.user.id){
-      this.props.navigation.push('Loading')
-    }
-  }
-
   componentDidMount() {
     if (!this.props.user.id) {
-      this.props.navigation.push('Loading')
+      this.props.navigation.navigate('Loading')
     }
   }
 
   render() {
-    // if (!this.props.user.id) {
-    //   return <Loading />
-    // } else
-    if (this.props.user.id) {
-      return (
-        <View
+    return (
+      <Container>
+        <Header style={{backgroundColor: 'grey'}}>
+          <Left>
+            <Icon name='menu' onPress={() => this.props.navigation.toggleDrawer()} />
+          </Left>
+          <Right>
+            <View/>
+          </Right>
+        </Header>
+
+        <Body
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text>Welcome {this.props.user.login}.</Text>
           <Text>HOME PAGE</Text>
-        </View>
-      )
-    } else return null
+          <Text>Recent activity:</Text> 
+          <View>
+
+          </View>
+        </Body>
+      </Container>
+    )
   }
 }
 

@@ -11,8 +11,13 @@ class Loading extends React.Component {
       console.log('userObj exists!!!' , userObj)
       let user = JSON.parse(userObj)
       this.props.loginUser(user)
+      setTimeout(() => {
+        this.props.navigation.navigate('App')
+      }, 500);
     } else {
-      this.props.navigation.navigate('Login')
+      setTimeout(() => {
+        this.props.navigation.navigate('Login')
+      }, 500);
     }
   }
 

@@ -1,43 +1,22 @@
-
 import React, { Component } from 'react'
 import { Text, View, Button } from 'react-native'
 import {
   createStackNavigator,
+  createSwitchNavigator,
   createDrawerNavigator,
   createAppContainer,
 } from 'react-navigation'
 
 import { Provider } from 'react-redux'
 import store from './reducers/store'
-import { Login, Home, DrawerComp, Logout, Loading } from './components'
+import { Login, Home, DrawerComp, Logout, Loading, Repos } from './components'
+import {Icon} from 'native-base'
 
-const StackNavigator = createStackNavigator(
+const AppDrawerStack = createDrawerNavigator(
   {
-    Home: {
-      screen: Home,
-      navigationOptions: ({ navigation }) => ({
-        // headerStyle: { backgroundColor: 'grey' },
-        // headerTitleStyle: {textAlign: 'center', flex: 1},
-        // title: 'Home!',
-        // headerLeft: (
-        //   <Text onPress={() => navigation.toggleDrawer()}>Menu</Text>
-        // ),
-        // headerRight: (<View />)
-      }),
-    },
-    Login,
-    Loading,
-  },
-  {
-    initialRouteName: 'Home',
-    // headerLeft: null,
-  }
-)
-
-const AppDrawerNavigator = createDrawerNavigator(
-  {
-    Home: StackNavigator,
-    Logout: Logout
+    Home: Home,
+    Repos,
+    Logout: Logout,
   },
   {
     initialRouteName: 'Home',
@@ -55,7 +34,31 @@ const AppDrawerNavigator = createDrawerNavigator(
   }
 )
 
-const AppContainer = createAppContainer(AppDrawerNavigator)
+const AuthStack = createStackNavigator(
+  {
+    Login: {
+      screen: Login,
+      navigationOptions: ({ navigation }) => ({
+        header: null,
+      }),
+    },
+    //signup
+    //reset etc
+  }
+)
+
+const SwitchNavigator = createSwitchNavigator(
+  {
+    Loading,
+    Login: AuthStack,
+    App: AppDrawerStack
+  },
+  {
+    initialRouteName: 'Loading',
+  }
+)
+
+const AppContainer = createAppContainer(SwitchNavigator)
 
 export default class App extends Component {
   render() {

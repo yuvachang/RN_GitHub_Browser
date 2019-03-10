@@ -2,18 +2,16 @@ import React from 'react'
 import { AsyncStorage, View, Text, ActivityIndicator } from 'react-native'
 import styles from '../styles'
 import { connect } from 'react-redux'
-import {logout} from '../reducers/user'
+import { logout } from '../reducers/user'
 
 class Loading extends React.Component {
   async componentDidMount() {
     let userObj = await AsyncStorage.getItem('userObj')
     if (userObj !== null) {
       await AsyncStorage.removeItem('userObj')
-      await this.props.logout()
-      this.props.navigation.navigate('Home')
-    } else (
-      this.props.navigation.navigate('Login')
-    )
+    }
+    await this.props.logout()
+    this.props.navigation.navigate('Loading')
   }
 
   render() {
