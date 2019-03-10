@@ -1,25 +1,25 @@
 import React from 'react'
 import { AsyncStorage, View, Text, ActivityIndicator } from 'react-native'
 import styles from '../styles'
-import {loginUser} from '../reducers/user'
 import { connect } from 'react-redux'
+import {logout} from '../reducers/user'
 
 class Loading extends React.Component {
   async componentDidMount() {
     let userObj = await AsyncStorage.getItem('userObj')
     if (userObj !== null) {
-      console.log('userObj exists!!!' , userObj)
-      let user = JSON.parse(userObj)
-      this.props.loginUser(user)
-    } else {
+      await AsyncStorage.removeItem('userObj')
+      await this.props.logout()
+      this.props.navigation.navigate('Home')
+    } else (
       this.props.navigation.navigate('Login')
-    }
+    )
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text>Logging out...</Text>
         <ActivityIndicator size='large' />
       </View>
     )
@@ -33,7 +33,7 @@ class Loading extends React.Component {
 // })
 
 const mapDispatch = dispatch => ({
-  loginUser: user => dispatch(loginUser(user)),
+  logout: () => dispatch(logout()),
 })
 
 export default connect(

@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { StackActions, NavigationActions } from 'react-navigation'
-import { Text, TextInput, View, Button } from 'react-native'
+import { AsyncStorage, Text, TextInput, View, Button, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
-import firebase from 'react-native-firebase'
-import base64 from 'react-native-base64'
 
-import { loginUserThunk } from '../reducers/user'
+import { loginUserThunk, loading } from '../reducers/user'
 import styles from '../styles'
 
 class Login extends Component {
@@ -13,46 +11,52 @@ class Login extends Component {
     headerLeft: null,
   }
 
-  state = {
-    email: '',
-    password: '',
-    // errorMessage: null,
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+      emptyMsg: null,
+    }
   }
 
-  handleChange = (evt) => {
-    this.setState({
-      [evt.target.name]: evt.target.value
-    })
+  handleLogin = async () => {
+    if(this.state.email === ''&&this.state.password === '') {
+      await this.setState({emptyMsg: 'both'})
+      return
+    } else if (this.state.email === '') {
+      await this.setState({emptyMsg: 'email'})
+      return
+    } else if (this.state.password === '') {
+      await this.setState({emptyMsg: 'password'})
+      return
+    }
+    await this.setState({emptyMsg: null})
+    this.props.loading()
+    await this.props.loginUserThunk(this.state)
+    if (this.props.user.id) {
+      // this.props.navigation.navigate('Home')
+      this.props.navigation.popToTop()
+    }
   }
 
-  handleLogin = () => {
-    // TODO: Firebase stuff...
-    let encoded = base64.encode('this is a test')
-    let decoded = base64.decode('dGhpcyBpcyBhIHRlc3Q=')
-    this.props.loginUserThunk()
-  }
-
-  componentDidMount() {
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Login' })],
-      key: 'Login',
-    })
-    this.props.navigation.dispatch(resetAction)
-  }
   render() {
     return (
       <View style={styles.container}>
-        <Text>Basic Auth. Enter credentials.</Text>
-        {this.state.errorMessage && (
-          <Text style={{ color: 'red' }}>{this.state.errorMessage}</Text>
+        <Text>Basic Auth: enter username and password</Text>
+        {this.props.errorMessage !== '' && (
+          <Text style={{ color: 'red' }}>
+            {this.props.errorMessage}: username or password incorrect
+          </Text>
         )}
+        {this.state.emptyMsg==='both' && <Text>Enter credentials.</Text>}
+        {this.state.emptyMsg==='email' && <Text>Enter an email or username.</Text>}
+        {this.state.emptyMsg==='password' && <Text>Enter a password.</Text>}
         <TextInput
           style={styles.textInput}
           autoCapitalize='none'
           placeholder='Email or username'
-          name='email'
-          onChange={this.handleChange}
+          onChangeText={text => this.setState({ email: text })}
           value={this.state.email}
         />
         <TextInput
@@ -60,16 +64,11 @@ class Login extends Component {
           style={styles.textInput}
           autoCapitalize='none'
           placeholder='Password'
-          name='password'
-          onChange={this.handleChange}
+          onChangeText={text => this.setState({ password: text })}
           value={this.state.password}
         />
-        {/* <Button
-          title="Don't have an account? Sign Up"
-          onPress={() => this.props.navigation.navigate('SignUp')}
-        /> */}
-
         <Button title='Login to Github' onPress={this.handleLogin} />
+        {this.props.loading===true && <ActivityIndicator size="small" />}
       </View>
     )
   }
@@ -77,12 +76,16 @@ class Login extends Component {
 
 const mapState = state => ({
   user: state.userReducer.user,
+  errorMessage: state.userReducer.errorMessage,
+  loading: state.userReducer.loading
 })
 
 const mapDispatch = dispatch => ({
-  loginUserThunk: () => dispatch(loginUserThunk()),
+  loginUserThunk: login => dispatch(loginUserThunk(login)),
+  loading: () => dispatch(loading())
 })
 
-export default connect(mapState, mapDispatch)(Login)
-
-// firebase.auth().onAuthStateChanged
+export default connect(
+  mapState,
+  mapDispatch
+)(Login)

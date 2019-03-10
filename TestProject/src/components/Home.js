@@ -1,25 +1,56 @@
 import React, { Component } from 'react'
-import { Platform, StyleSheet, Text, View, Button } from 'react-native'
-import { createAppContainer, createStackNavigator } from 'react-navigation'
-import firebase from 'react-native-firebase'
+import { Text, View, Button } from 'react-native'
+import { StackActions, NavigationActions } from 'react-navigation'
+import { connect } from 'react-redux'
+import Loading from './Loading'
 
 class Home extends Component {
-  handleLogin(){
+  static navigationOptions = ({ navigation }) => {
+    return {
+      headerStyle: { backgroundColor: 'grey' },
+      headerTitleStyle: { textAlign: 'center', flex: 1 },
+      title: 'Home!',
+      headerLeft: <Text onPress={() => navigation.toggleDrawer()}>Menu</Text>,
+      headerRight: <View />,
+    }
+  }
+  handleLogin() {}
 
+  componentDidUpdate(prevProps){
+    if((prevProps.user.id && !this.props.user.id)|| !this.props.user.id){
+      this.props.navigation.push('Loading')
+    }
+  }
+
+  componentDidMount() {
+    if (!this.props.user.id) {
+      this.props.navigation.push('Loading')
+    }
   }
 
   render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Welcome.</Text>
-        firebase.auth().onAuthStateChanged
-        <Button
-          title='Login with GitHub'
-          onPress={this.handleLogin}
-        />
-      </View>
-    )
+    // if (!this.props.user.id) {
+    //   return <Loading />
+    // } else
+    if (this.props.user.id) {
+      return (
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text>Welcome {this.props.user.login}.</Text>
+          <Text>HOME PAGE</Text>
+        </View>
+      )
+    } else return null
   }
 }
 
-export default Home
+const mapState = state => ({
+  user: state.userReducer.user,
+})
+
+const mapDispatch = dispatch => ({})
+
+export default connect(
+  mapState,
+  mapDispatch
+)(Home)
