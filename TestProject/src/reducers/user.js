@@ -43,7 +43,7 @@ export const loginUserThunk = login => {
         headers: { Authorization: 'Basic ' + encoded },
       }
       const res = await axios.get('https://api.github.com/user', config)
-      await AsyncStorage.setItem('login64', encoded)
+      await AsyncStorage.setItem('login64', JSON.stringify(config))
       let storedUser = JSON.stringify(res.data)
       await AsyncStorage.setItem('userObj', storedUser)
       dispatch(loginUser(res.data))

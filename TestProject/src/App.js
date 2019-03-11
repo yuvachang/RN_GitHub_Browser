@@ -9,13 +9,24 @@ import {
 
 import { Provider } from 'react-redux'
 import store from './reducers/store'
-import { Login, Home, DrawerComp, Logout, Loading, Repos } from './components'
+import { Login, Home, DrawerComp, Logout, Loading, Repos, SingleRepo } from './components'
 import {Icon} from 'native-base'
+
+const RepoStack = createStackNavigator(
+  {
+    Repos,
+    SingleRepo,
+  }, 
+  {
+    initialRouteName: 'Repos',
+    headerMode: 'none'
+  }
+)
 
 const AppDrawerStack = createDrawerNavigator(
   {
     Home: Home,
-    Repos,
+    Repos: RepoStack,
     Logout: Logout,
   },
   {

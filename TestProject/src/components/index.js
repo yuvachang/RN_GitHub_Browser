@@ -4,6 +4,7 @@ import Login from './Login'
 import DrawerComp from './DrawerComp'
 import Logout from './Logout'
 import Repos from './Repos'
+import SingleRepo from './SingleRepo'
 
 export {
   Loading,
@@ -11,5 +12,6 @@ export {
   Login,
   DrawerComp,
   Logout,
-  Repos
+  Repos,
+  SingleRepo
 }

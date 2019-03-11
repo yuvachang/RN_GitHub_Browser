@@ -1,13 +1,23 @@
 import React, { Component } from 'react'
-import { Text, View, Button } from 'react-native'
+import { ScrollView, Text, View, Button } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { fetchReposThunk } from '../reducers/data'
-import { Icon, Header, Container, Left, Body, Right, Title } from 'native-base'
+import styles from '../styles'
+import {
+  Icon,
+  Header,
+  Container,
+  Left,
+  Body,
+  Right,
+  List,
+  ListItem,
+} from 'native-base'
 
 class Home extends Component {
   async componentDidMount() {
-    await this.props.fetchReposThunk('public', 'created', 'owner')
+    await this.props.fetchReposThunk('all', 'created', 'owner')
   }
 
   render() {
@@ -19,27 +29,46 @@ class Home extends Component {
       )
     } else {
       return (
-        <Container>
-          <Header style={{ backgroundColor: 'grey' }}>
+        <Container style={{flexDirection: 'column', justifyContent: 'center'}}>
+          <Header style={{ backgroundColor: 'grey', alignSelf: 'stretch'}}>
             <Left>
               <Icon
                 name='menu'
                 onPress={() => this.props.navigation.toggleDrawer()}
               />
             </Left>
-            <Title style={{alignSelf: 'center', flex: 1}}>Repos!</Title>
             <Right>
               <View />
             </Right>
           </Header>
-          <Body
-            style={{
-              flex: 1,
-              alignItems: 'flex-start',
-              justifyContent: 'center',
+          <View style={{
+            alignSelf: 'stretch',
+            flex: 1
             }}>
-            <Text>List of repos here</Text>
-          </Body>
+            <Text style={{ fontSize: 18, textAlign: 'center' }}>List of repos here:</Text>
+            <ScrollView>
+              <List>
+                {this.props.repos.map(repo => {
+                  return (
+                    <ListItem key={repo.id}>
+                      <Text
+                      style={{flex: 4}}
+                        onPress={() =>
+                          this.props.navigation.nagivate('SingleRepo', {
+                            ...repo,
+                          })
+                        }>
+                        {repo.name}
+                      </Text>
+                      <Right style={{flex: 1}}>
+                        <Icon name='arrow-forward' />
+                      </Right>
+                    </ListItem>
+                  )
+                })}
+              </List>
+            </ScrollView>
+          </View>
         </Container>
       )
     }
@@ -51,7 +80,8 @@ const mapState = state => ({
 })
 
 const mapDispatch = dispatch => ({
-  fetchReposThunk: (visFilter, sortFilter, affiliation) => dispatch(fetchReposThunk(visFilter, sortFilter, affiliation)),
+  fetchReposThunk: (visFilter, sortFilter, affiliation) =>
+    dispatch(fetchReposThunk(visFilter, sortFilter, affiliation)),
 })
 
 export default connect(

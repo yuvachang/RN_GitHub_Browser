@@ -7,6 +7,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  body: {
+    flex: 1,
+    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
