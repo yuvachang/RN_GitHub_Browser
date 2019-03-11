@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Text, View, Button } from 'react-native'
 import {
   createStackNavigator,
   createSwitchNavigator,
@@ -9,17 +8,24 @@ import {
 
 import { Provider } from 'react-redux'
 import store from './reducers/store'
-import { Login, Home, DrawerComp, Logout, Loading, Repos, SingleRepo } from './components'
-import {Icon} from 'native-base'
+import {
+  Login,
+  Home,
+  DrawerComp,
+  Logout,
+  Loading,
+  Repos,
+  SingleRepo,
+} from './components'
 
 const RepoStack = createStackNavigator(
   {
     Repos,
     SingleRepo,
-  }, 
+  },
   {
     initialRouteName: 'Repos',
-    headerMode: 'none'
+    headerMode: 'none',
   }
 )
 
@@ -45,24 +51,22 @@ const AppDrawerStack = createDrawerNavigator(
   }
 )
 
-const AuthStack = createStackNavigator(
-  {
-    Login: {
-      screen: Login,
-      navigationOptions: ({ navigation }) => ({
-        header: null,
-      }),
-    },
-    //signup
-    //reset etc
-  }
-)
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: Login,
+    navigationOptions: ({ navigation }) => ({
+      header: null,
+    }),
+  },
+  //signup
+  //reset etc
+})
 
 const SwitchNavigator = createSwitchNavigator(
   {
     Loading,
     Login: AuthStack,
-    App: AppDrawerStack
+    App: AppDrawerStack,
   },
   {
     initialRouteName: 'Loading',

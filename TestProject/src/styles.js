@@ -7,16 +7,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  header: {
+    backgroundColor: '#E6E6FA',
+    alignSelf: 'stretch',
+  },
   body: {
     flex: 1,
     alignItems: 'flex-start',
-    alignItems: 'stretch',
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
-  welcome: {
-    fontSize: 20,
+  title: {
+    fontSize: 18,
     textAlign: 'center',
-    margin: 10,
+    margin: 5,
   },
   instructions: {
     textAlign: 'center',
@@ -28,8 +31,8 @@ const styles = StyleSheet.create({
     width: '90%',
     borderColor: 'gray',
     borderWidth: 1,
-    marginTop: 8
-  }
+    marginTop: 8,
+  },
 })
 
 export default styles

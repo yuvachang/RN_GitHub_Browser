@@ -13,7 +13,7 @@ class Loading extends React.Component {
       this.props.loginUser(user)
       setTimeout(() => {
         this.props.navigation.navigate('App')
-      }, 500);
+      }, 700);
     } else {
       setTimeout(() => {
         this.props.navigation.navigate('Login')

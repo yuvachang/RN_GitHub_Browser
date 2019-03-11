@@ -1,40 +1,110 @@
 import React, { Component } from 'react'
-import { Text, View, Button } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { connect } from 'react-redux'
-import { fetchRepoContentThunk } from '../reducers/data'
-import { Icon, Header, Container, Left, Body, Right, Title } from 'native-base'
+import { fetchRepoContentThunk, destack } from '../reducers/data'
+import { Icon, Container, Right, List, ListItem } from 'native-base'
+import HeaderC from './Header'
+import styles from '../styles'
 
 class SingleRepo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      repoName: this.props.navigation.getParam('repoName'),
+      dirName: this.props.navigation.getParam('dirName'),
+    }
+    this.handlePress = this.handlePress.bind(this)
+  }
+
+  handlePress(name) {
+    if (!this.state.dirName) {
+      this.props.navigation.push('SingleRepo', {
+        dirName: name,
+        repoName: this.state.repoName,
+      })
+    } else if (this.state.dirName) {
+      this.props.navigation.push('SingleRepo', {
+        dirName: this.state.dirName.concat(`/${name}`),
+        repoName: this.state.repoName,
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.destack()
+  }
+
   async componentDidMount() {
-    const repoName = this.props.navigation.getParam('repoName')
-    console.log(repoName)
-    // await this.props.fetchRepoContentThunk(repoName)
+    console.log('STATEDIRNAME!!!', this.state.dirName)
+    if (this.state.dirName) {
+      console.log(
+        'fetchRepo THunk ran with dirname!!!!!!!!!!!!!!!!!!!!!',
+        this.state.dirName
+      )
+      await this.props.fetchRepoContentThunk(
+        this.state.repoName,
+        this.state.dirName
+      )
+    } else {
+      await this.props.fetchRepoContentThunk(this.state.repoName)
+    }
   }
 
   render() {
+    console.log(Array.isArray(this.props.content[0]))
+    console.log(
+      'CONTENT%%%%%%%%%%%%%%%',
+      this.props.content,
+      this.props.content.length - 1
+    )
     return (
       <Container>
-        <Header style={{ backgroundColor: 'grey' }}>
-          <Left>
-            <Icon
-              name='menu'
-              onPress={() => this.props.navigation.toggleDrawer()}
-            />
-          </Left>
-          <Right>
-            <View />
-          </Right>
-        </Header>
-        <Body
+        <HeaderC navigation={this.props.navigation} />
+        <Text style={styles.title}>{this.state.repoName}</Text>
+        <View
           style={{
+            alignSelf: 'stretch',
             flex: 1,
-            alignItems: 'flex-start',
-            justifyContent: 'center',
           }}>
-          <Text>Single repo page:</Text>
-          <Text>Repo name: {this.props.navigation.getParam('repoName')}</Text>
-          <Text>Go to Repo Content</Text>
-        </Body>
+          {!this.state.dirName && (
+            <Text style={{ textAlign: 'center' }}>Content:</Text>
+          )}
+          {!!this.state.dirName && (
+            <Text style={{ textAlign: 'center' }}>{this.state.dirName}:</Text>
+          )}
+          <ScrollView>
+            {!Array.isArray(this.props.content[0]) ? (
+              <Text>Loading...</Text>
+            ) : (
+              <List>
+                {this.props.content[this.props.content.length - 1].map(
+                  content => {
+                    if (content.type === 'dir') {
+                      return (
+                        <ListItem key={content.sha}>
+                          <Text
+                            style={{ flex: 4 }}
+                            onPress={() => this.handlePress(content.name)}>
+                            {content.name}
+                          </Text>
+                          <Right style={{ flex: 1 }}>
+                            <Icon name='arrow-forward' />
+                          </Right>
+                        </ListItem>
+                      )
+                    } else {
+                      return (
+                        <ListItem key={content.sha}>
+                          <Text>{content.name}</Text>
+                        </ListItem>
+                      )
+                    }
+                  }
+                )}
+              </List>
+            )}
+          </ScrollView>
+        </View>
       </Container>
     )
   }
@@ -45,7 +115,9 @@ const mapState = state => ({
 })
 
 const mapDispatch = dispatch => ({
-  fetchRepoContentThunk: repoName => dispatch(fetchRepoContentThunk(repoName)),
+  fetchRepoContentThunk: (repoName, dirName) =>
+    dispatch(fetchRepoContentThunk(repoName, dirName)),
+  destack: () => dispatch(destack()),
 })
 
 export default connect(

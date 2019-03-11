@@ -1,15 +1,17 @@
 import axios from 'axios'
 import { AsyncStorage } from 'react-native'
-import {grabUsername} from '../util'
+import { grabUsername } from '../util'
 
 const initialState = {
   repos: [],
-  selectedRepoContent: []
+  selectedRepoContent: [['wtf'], ['i hate you']],
+  stackCount: 0
 }
 
 //actions
 const REPOS = 'REPOS'
 const CONTENT = 'CONTENT'
+const DESTACK = 'DESTACK'
 
 //action creators
 const gotRepos = repos => ({
@@ -19,7 +21,11 @@ const gotRepos = repos => ({
 
 const gotContent = content => ({
   type: CONTENT,
-  content
+  content,
+})
+
+export const destack = () => ({
+  type: DESTACK,
 })
 
 //thunk creators
@@ -42,25 +48,62 @@ export const fetchReposThunk = (visFilter, sortFilter, affiliation) => {
   }
 }
 
-export const fetchRepoContentThunk = (repoName) => {
+export const fetchRepoContentThunk = (repoName, dirName) => {
   return async dispatch => {
     try {
       let login64 = await AsyncStorage.getItem('login64')
       let config = JSON.parse(login64)
-      let username = await grabUsername() 
-      let res = await axios.get(`https://api.github.com/repos/${username}/${repoName}/contents/`, config)
-      let content = res.data
-      dispatch(gotContent(content))
+      let username = await grabUsername()
+      // if dirName passed, access directory inside repo
+      if (dirName) {
+        console.log(
+          'making api call with dirname!!!!!!!!!!!!!!!!!!!!!!!',
+          dirName
+        )
+        let res = await axios.get(
+          `https://api.github.com/repos/${username}/${repoName}/contents/${dirName}`,
+          config
+        )
+        let content = res.data
+        dispatch(gotContent(content))
+        return
+      }
+      // otherwise access repo contents only
+      else {
+        console.log(
+          'makingapicall without dirname!!!!!!!!!!!!!!',
+          repoName,
+          dirName
+        )
+        let res = await axios.get(
+          `https://api.github.com/repos/${username}/${repoName}/contents/`,
+          config
+        )
+        let content = res.data
+        dispatch(gotContent(content))
+        return
+      }
     } catch (error) {
       console.log('fetchRepoContentThunk errror: ', error)
     }
   }
 }
 
+export const pushNestedDirThunk = (dirName) 
+
 const dataReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CONTENT: 
-      return {...state, selectedRepoContent: action.content}
+    case DESTACK:
+      if (state.selectedRepoContent[0]) {
+        state.selectedRepoContent.pop()
+      }
+      return { ...state }
+    case CONTENT:
+      return {
+        ...state,
+        selectedRepoContent: [...state.selectedRepoContent, action.content],
+        stackCount: state.stackCount++
+      }
     case REPOS:
       return { ...state, repos: action.repos }
     default:

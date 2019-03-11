@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, Button } from 'react-native'
+import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import { fetchRepoContentThunk } from '../reducers/data'
-import { Icon, Header, Container, Left, Body, Right, Title } from 'native-base'
+import { Container, Body } from 'native-base'
+import HeaderC from './Header'
 
 class Home extends Component {
   componentDidMount() {
@@ -19,17 +20,7 @@ class Home extends Component {
     } else {
       return (
         <Container>
-          <Header style={{ backgroundColor: 'grey' }}>
-            <Left>
-              <Icon
-                name='menu'
-                onPress={() => this.props.navigation.toggleDrawer()}
-              />
-            </Left>
-            <Right>
-              <View />
-            </Right>
-          </Header>
+          <HeaderC navigation={this.props.navigation}/>
           <Body
             style={{
               flex: 1,

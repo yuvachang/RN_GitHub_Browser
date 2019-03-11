@@ -5,6 +5,7 @@ import DrawerComp from './DrawerComp'
 import Logout from './Logout'
 import Repos from './Repos'
 import SingleRepo from './SingleRepo'
+import HeaderC from './Header'
 
 export {
   Loading,
@@ -13,5 +14,6 @@ export {
   DrawerComp,
   Logout,
   Repos,
-  SingleRepo
+  SingleRepo,
+  HeaderC
 }
