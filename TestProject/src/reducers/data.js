@@ -89,13 +89,12 @@ export const fetchRepoContentThunk = (repoName, dirName) => {
   }
 }
 
-export const pushNestedDirThunk = (dirName) 
-
 const dataReducer = (state = initialState, action) => {
   switch (action.type) {
     case DESTACK:
       if (state.selectedRepoContent[0]) {
         state.selectedRepoContent.pop()
+        console.log(state.selectedRepoContent)
       }
       return { ...state }
     case CONTENT:

@@ -6,6 +6,14 @@ import { Icon, Container, Right, List, ListItem } from 'native-base'
 import HeaderC from './Header'
 import styles from '../styles'
 
+const keygen = (function() {
+  let i = 0
+  return () => {
+    i++
+    return i
+  }
+})()
+
 class SingleRepo extends Component {
   constructor(props) {
     super(props)
@@ -34,13 +42,15 @@ class SingleRepo extends Component {
     this.props.destack()
   }
 
+  componentDidUpdate(prevProps){
+    if (prevProps!== this.props) {
+      console.log('back was hit')
+      this.forceUpdate()
+    }
+  }
+
   async componentDidMount() {
-    console.log('STATEDIRNAME!!!', this.state.dirName)
     if (this.state.dirName) {
-      console.log(
-        'fetchRepo THunk ran with dirname!!!!!!!!!!!!!!!!!!!!!',
-        this.state.dirName
-      )
       await this.props.fetchRepoContentThunk(
         this.state.repoName,
         this.state.dirName
@@ -51,12 +61,6 @@ class SingleRepo extends Component {
   }
 
   render() {
-    console.log(Array.isArray(this.props.content[0]))
-    console.log(
-      'CONTENT%%%%%%%%%%%%%%%',
-      this.props.content,
-      this.props.content.length - 1
-    )
     return (
       <Container>
         <HeaderC navigation={this.props.navigation} />
@@ -81,7 +85,7 @@ class SingleRepo extends Component {
                   content => {
                     if (content.type === 'dir') {
                       return (
-                        <ListItem key={content.sha}>
+                        <ListItem key={keygen()}>
                           <Text
                             style={{ flex: 4 }}
                             onPress={() => this.handlePress(content.name)}>
@@ -94,7 +98,7 @@ class SingleRepo extends Component {
                       )
                     } else {
                       return (
-                        <ListItem key={content.sha}>
+                        <ListItem key={keygen()}>
                           <Text>{content.name}</Text>
                         </ListItem>
                       )
