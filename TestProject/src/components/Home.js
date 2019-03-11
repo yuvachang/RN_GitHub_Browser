@@ -23,12 +23,12 @@ class Home extends Component {
         </Header>
 
         <Body
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          style={{ flex: 1, alignItems: 'center'}}>
           <Text>Welcome {this.props.user.login}.</Text>
-          <Text>HOME PAGE</Text>
+          <Text>   </Text>
           <Text>Recent activity:</Text> 
           <View>
-
+            
           </View>
         </Body>
       </Container>

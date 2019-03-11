@@ -15,7 +15,7 @@ import {
   ListItem,
 } from 'native-base'
 
-class Home extends Component {
+class Repos extends Component {
   async componentDidMount() {
     await this.props.fetchReposThunk('all', 'created', 'owner')
   }
@@ -54,8 +54,8 @@ class Home extends Component {
                       <Text
                       style={{flex: 4}}
                         onPress={() =>
-                          this.props.navigation.nagivate('SingleRepo', {
-                            ...repo,
+                          this.props.navigation.navigate('SingleRepo', {
+                            repoName: repo.name,
                           })
                         }>
                         {repo.name}
@@ -87,4 +87,4 @@ const mapDispatch = dispatch => ({
 export default connect(
   mapState,
   mapDispatch
-)(Home)
+)(Repos)
