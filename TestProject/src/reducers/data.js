@@ -5,13 +5,15 @@ import { grabUsername } from '../util'
 const initialState = {
   repos: [],
   selectedRepoContent: [],
-  stackCount: 0
+  stackCount: 0,
+  issues: []
 }
 
 //actions
 const REPOS = 'REPOS'
 const CONTENT = 'CONTENT'
 const DESTACK = 'DESTACK'
+const ISSUES = 'ISSUES'
 
 //action creators
 const gotRepos = repos => ({
@@ -28,7 +30,29 @@ export const destack = () => ({
   type: DESTACK,
 })
 
+const gotIssues = (issues) => ({
+ type: ISSUES,
+ issues
+})
+
 //thunk creators
+export const fetchIssuesThunk = () => {
+  return async dispatch => {
+    try {
+      let login64 = await AsyncStorage.getItem('login64')
+      let config = JSON.parse(login64)
+      const res = await axios.get(
+        `https://api.github.com/issues`,
+        config
+      )
+      let issues = res.data
+      dispatch(gotIssues(issues))
+    } catch (error) {
+      console.log('fetchIssuesThunk error: ', error)
+    }
+  }
+}
+
 export const fetchReposThunk = (visFilter, sortFilter, affiliation) => {
   return async dispatch => {
     try {
@@ -89,6 +113,8 @@ export const fetchRepoContentThunk = (repoName, dirName) => {
 
 const dataReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ISSUES: 
+      return {...state, issues: action.issues}
     case DESTACK:
       if (state.selectedRepoContent[0]) {
         state.selectedRepoContent.pop()
