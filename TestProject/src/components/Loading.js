@@ -13,11 +13,11 @@ class Loading extends React.Component {
       this.props.loginUser(user)
       setTimeout(() => {
         this.props.navigation.navigate('App')
-      }, 700);
+      }, 900);
     } else {
       setTimeout(() => {
         this.props.navigation.navigate('Login')
-      }, 500);
+      }, 900);
     }
   }
 
@@ -30,12 +30,6 @@ class Loading extends React.Component {
     )
   }
 }
-
-// const mapState = state => ({
-//   user: state.userReducer.user,
-//   errorMessage: state.userReducer.errorMessage,
-//   loading: state.userReducer.loading
-// })
 
 const mapDispatch = dispatch => ({
   loginUser: user => dispatch(loginUser(user)),

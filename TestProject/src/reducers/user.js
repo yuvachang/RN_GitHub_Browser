@@ -58,11 +58,11 @@ export const loginUserThunk = login => {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGOUT:
-      return {...state, user: {}, isLoggedIn: false}
+      return { ...state, user: {}, isLoggedIn: false, errorMessage: '' }
     case LOADING:
       return { ...state, loading: true }
     case ERROR:
-      return { ...state, errorMessage: action.error, loading: false}
+      return { ...state, errorMessage: action.error, loading: false }
     case LOGIN_USER:
       return { ...state, user: action.user, isLoggedIn: true, loading: false }
     default:

@@ -4,7 +4,7 @@ import { grabUsername } from '../util'
 
 const initialState = {
   repos: [],
-  selectedRepoContent: [['wtf'], ['i hate you']],
+  selectedRepoContent: [],
   stackCount: 0
 }
 
@@ -32,10 +32,8 @@ export const destack = () => ({
 export const fetchReposThunk = (visFilter, sortFilter, affiliation) => {
   return async dispatch => {
     try {
-      console.log(visFilter, sortFilter, affiliation)
       let login64 = await AsyncStorage.getItem('login64')
       let config = JSON.parse(login64)
-      console.log(config)
       const res = await axios.get(
         `https://api.github.com/user/repos?visibility=${visFilter}&affiliation=${affiliation}&sort=${sortFilter}&per_page=300`,
         config
@@ -43,7 +41,7 @@ export const fetchReposThunk = (visFilter, sortFilter, affiliation) => {
       const repos = res.data
       dispatch(gotRepos(repos))
     } catch (error) {
-      console.log('fetchReposThunk errror: ', error)
+      console.log('fetchReposThunk error: ', error)
     }
   }
 }
@@ -57,7 +55,7 @@ export const fetchRepoContentThunk = (repoName, dirName) => {
       // if dirName passed, access directory inside repo
       if (dirName) {
         console.log(
-          'making api call with dirname!!!!!!!!!!!!!!!!!!!!!!!',
+          'fetchRepoContentThunk: nested directory api call',
           dirName
         )
         let res = await axios.get(
@@ -71,7 +69,7 @@ export const fetchRepoContentThunk = (repoName, dirName) => {
       // otherwise access repo contents only
       else {
         console.log(
-          'makingapicall without dirname!!!!!!!!!!!!!!',
+          'fetchRepoContentThunk: root directory api call',
           repoName,
           dirName
         )
@@ -84,7 +82,7 @@ export const fetchRepoContentThunk = (repoName, dirName) => {
         return
       }
     } catch (error) {
-      console.log('fetchRepoContentThunk errror: ', error)
+      console.log('fetchRepoContentThunk error: ', error)
     }
   }
 }
@@ -94,7 +92,6 @@ const dataReducer = (state = initialState, action) => {
     case DESTACK:
       if (state.selectedRepoContent[0]) {
         state.selectedRepoContent.pop()
-        console.log(state.selectedRepoContent)
       }
       return { ...state }
     case CONTENT:

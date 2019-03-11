@@ -15,8 +15,8 @@ class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: 'yuvachang',
-      password: '12345Adgjl',
+      email: '',
+      password: '',
       emptyMsg: null,
     }
   }
@@ -36,7 +36,10 @@ class Login extends Component {
     this.props.loading()
     await this.props.loginUserThunk(this.state)
     if (this.props.user.id) {
-      this.props.navigation.navigate('App')
+      this.setState({ emptyMsg: 'loading' })
+      setTimeout(() => {
+        this.props.navigation.navigate('App')
+      }, 700);
     } 
   }
 
@@ -70,7 +73,7 @@ class Login extends Component {
           value={this.state.password}
         />
         <Button title='Login to Github' onPress={this.handleLogin} />
-        {this.props.loading === true && <ActivityIndicator size='small' />}
+        {(this.props.loading === true || this.state.emptyMsg==='loading') && <ActivityIndicator size='small' />}
       </View>
     )
   }

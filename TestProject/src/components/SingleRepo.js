@@ -42,14 +42,10 @@ class SingleRepo extends Component {
     this.props.destack()
   }
 
-  componentDidUpdate(prevProps){
-    if (prevProps!== this.props) {
-      console.log('back was hit')
-      this.forceUpdate()
-    }
-  }
-
   async componentDidMount() {
+    this.props.navigation.addListener('didFocus', payload => {
+      this.forceUpdate()
+    })
     if (this.state.dirName) {
       await this.props.fetchRepoContentThunk(
         this.state.repoName,

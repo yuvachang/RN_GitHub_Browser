@@ -11,7 +11,9 @@ class Loading extends React.Component {
       await AsyncStorage.removeItem('userObj')
     }
     await this.props.logout()
-    this.props.navigation.navigate('Loading')
+    setTimeout(() => {
+      this.props.navigation.navigate('Login')
+    }, 900);
   }
 
   render() {
@@ -23,12 +25,6 @@ class Loading extends React.Component {
     )
   }
 }
-
-// const mapState = state => ({
-//   user: state.userReducer.user,
-//   errorMessage: state.userReducer.errorMessage,
-//   loading: state.userReducer.loading
-// })
 
 const mapDispatch = dispatch => ({
   logout: () => dispatch(logout()),

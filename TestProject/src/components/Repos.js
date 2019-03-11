@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { ScrollView, Text, View } from 'react-native'
-import { StackActions, NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { fetchReposThunk } from '../reducers/data'
 import HeaderC from './Header'

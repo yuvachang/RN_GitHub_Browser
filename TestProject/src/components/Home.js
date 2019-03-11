@@ -31,9 +31,6 @@ const mapState = state => ({
   user: state.userReducer.user,
 })
 
-const mapDispatch = dispatch => ({})
-
 export default connect(
-  mapState,
-  mapDispatch
+  mapState
 )(Home)
