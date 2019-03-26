@@ -46,7 +46,7 @@ class SingleRepo extends Component {
     this.props.navigation.addListener('didFocus', payload => {
       this.forceUpdate()
     })
-    i  f (this.state.dirName) {
+    if (this.state.dirName) {
       await this.props.fetchRepoContentThunk(
         this.state.repoName,
         this.state.dirName
